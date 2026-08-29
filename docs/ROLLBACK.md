@@ -107,3 +107,6 @@ Log incident details in the engineering post-mortem repository:
 - [ ] Customer-facing error rates on `/metrics` return to 0.
 - [ ] Logs from failing candidate captured to file.
 - [ ] Incident notification sent to stakeholder channel.
+## Change Record
+
+This document was reviewed as part of the FinTechFlow release and rollback documentation.
