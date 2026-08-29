@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+
+# Python bytecode and caches
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+.venv
+venv
+env
+
+# Testing and coverage
+.pytest_cache
+.coverage
+htmlcov
+coverage.xml
+
+# Linters
+.ruff_cache
+.mypy_cache
+
+# Environment files with secrets
+.env
+.env.*
+!.env.example
+
+# Terraform
+terraform/.terraform
+*.tfstate
+*.tfstate.*
+
+# Documentation and markdown files (not strictly needed in runtime image, but keeping Docker lightweight)
+.github
+docs/
+*.md
+
+# IDE configs
+.idea
+.vscode
+*.swp

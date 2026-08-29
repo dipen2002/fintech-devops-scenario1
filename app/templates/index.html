@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 28px;">
+    
+    <!-- Hero / Status Overview Banner -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(30, 27, 75, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%); border-color: var(--border-glow); box-shadow: var(--shadow-glow);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <span class="badge badge-info" style="margin-bottom: 8px;">DevOps Scenario 1 Solution</span>
+                <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px;">
+                    FinTechFlow Release Dashboard
+                </h2>
+                <p style="color: var(--text-secondary); max-width: 650px; font-size: 0.95rem;">
+                    Demonstrating continuous integration, automated testing, containerisation, zero-downtime blue-green deployments, and fast rollback capabilities.
+                </p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <a href="{{ url_for('main.account') }}" class="btn btn-primary">View Account</a>
+                <a href="{{ url_for('main.transactions') }}" class="btn btn-secondary">View Transactions</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key DevOps & App Health Metrics Cards -->
+    <div class="grid-4">
+        <!-- Status Card -->
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Application Status</div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <span class="badge badge-success" style="font-size: 0.9rem; padding: 4px 10px;">
+                    <span class="pulse-dot"></span> {{ health.status | upper }}
+                </span>
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 10px;">Health Endpoint: <span class="font-mono">/health</span> (200 OK)</div>
+        </div>
+
+        <!-- Environment Card -->
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Current Environment</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 8px; color: var(--text-primary); text-transform: capitalize;">
+                {{ environment }}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 10px;">Configuration: <span class="font-mono">Config.ENVIRONMENT</span></div>
+        </div>
+
+        <!-- Version Card -->
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Release Version</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 8px; color: var(--accent-cyan);" class="font-mono">
+                v{{ version }}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 10px;">Semantic Versioning (SemVer)</div>
+        </div>
+
+        <!-- Account Balance Card -->
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Demo Balance</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 8px; color: var(--accent-success);">
+                {{ account.formatted_balance }}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 10px;">Status: <span class="badge badge-success">{{ account.status }}</span></div>
+        </div>
+    </div>
+
+    <!-- Main Grid: Recent Transactions & Live DevOps Testing Console -->
+    <div class="grid-2">
+        <!-- Recent Mock Activity -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 600;">Recent Transactions (Demo)</h3>
+                <a href="{{ url_for('main.transactions') }}" style="color: var(--accent-primary); text-decoration: none; font-size: 0.85rem; font-weight: 500;">View All &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th style="text-align: right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in transactions %}
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600; color: var(--text-primary);">{{ tx.title }}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ tx.date }}</div>
+                            </td>
+                            <td><span class="badge badge-info">{{ tx.category }}</span></td>
+                            <td style="text-align: right; font-weight: 600; color: {% if tx.amount > 0 %}var(--accent-success){% else %}#f87171{% endif %};">
+                                {{ tx.formatted_amount }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Live DevOps Operational Testing Console -->
+        <div class="card">
+            <div style="margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">DevOps Health &amp; Observability Endpoints</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Test the live JSON endpoints used by CI/CD pipelines, Docker health probes, and monitoring.</p>
+            </div>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+                <button class="btn btn-secondary btn-sm" onclick="fetchEndpoint('{{ url_for('main.health') }}')">GET /health</button>
+                <button class="btn btn-secondary btn-sm" onclick="fetchEndpoint('{{ url_for('main.version') }}')">GET /version</button>
+                <button class="btn btn-secondary btn-sm" onclick="fetchEndpoint('{{ url_for('main.metrics') }}')">GET /metrics</button>
+                <button class="btn btn-secondary btn-sm" onclick="fetchEndpoint('{{ url_for('main.api_account') }}')">GET /api/account</button>
+            </div>
+
+            <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.75rem; color: var(--text-muted);">
+                    <span id="endpoint-label">Endpoint: <span class="font-mono">/health</span></span>
+                    <span id="status-code-badge" class="badge badge-success">HTTP 200 OK</span>
+                </div>
+                <pre id="json-output" class="font-mono" style="font-size: 0.8rem; color: #a5f3fc; overflow-x: auto; max-height: 180px;">{{ health | tojson(indent=2) }}</pre>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function fetchEndpoint(url) {
+    const label = document.getElementById('endpoint-label');
+    const badge = document.getElementById('status-code-badge');
+    const output = document.getElementById('json-output');
+
+    label.innerHTML = `Endpoint: <span class="font-mono">${url}</span>`;
+    output.innerText = "Loading response...";
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        badge.innerText = `HTTP ${res.status} ${res.statusText || 'OK'}`;
+        badge.className = res.ok ? 'badge badge-success' : 'badge badge-danger';
+        output.innerText = JSON.stringify(data, null, 2);
+    } catch (err) {
+        badge.innerText = 'Network Error';
+        badge.className = 'badge badge-danger';
+        output.innerText = String(err);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 4px;">
+                <a href="{{ url_for('main.index') }}" style="color: var(--text-muted); text-decoration: none;">Dashboard</a> / Transactions
+            </div>
+            <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px;">
+                Transaction History
+            </h2>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{{ url_for('main.api_transactions') }}" target="_blank" class="btn btn-secondary btn-sm font-mono">
+                GET /api/transactions
+            </a>
+        </div>
+    </div>
+
+    <!-- Educational Banner -->
+    <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: var(--radius-md); padding: 12px 18px; font-size: 0.85rem; color: #c7d2fe;">
+        <strong>Simulated Activity:</strong> All listed transactions are hardcoded mock fixtures for DevOps testing, smoke verification, and UI demonstrations.
+    </div>
+
+    <!-- Transaction Summary Metrics -->
+    <div class="grid-3">
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Total Transactions</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 6px;" class="font-mono">{{ transactions|length }} Records</div>
+        </div>
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Total Credits (Inflow)</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: var(--accent-success); margin-top: 6px;">{{ stats.formatted_income }}</div>
+        </div>
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Total Debits (Outflow)</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: #f87171; margin-top: 6px;">{{ stats.formatted_expenses }}</div>
+        </div>
+    </div>
+
+    <!-- Full Transactions Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Description / Merchant</th>
+                        <th>Category</th>
+                        <th>Reference</th>
+                        <th>Date &amp; Time</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">{{ tx.id }}</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">{{ tx.title }}</div>
+                        </td>
+                        <td>
+                            <span class="badge badge-info">{{ tx.category }}</span>
+                        </td>
+                        <td class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">{{ tx.reference }}</td>
+                        <td style="font-size: 0.85rem;">{{ tx.date }}</td>
+                        <td>
+                            <span class="badge badge-success">{{ tx.status }}</span>
+                        </td>
+                        <td style="text-align: right; font-weight: 700; font-size: 0.95rem; color: {% if tx.amount > 0 %}var(--accent-success){% else %}#f87171{% endif %};">
+                            {{ tx.formatted_amount }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

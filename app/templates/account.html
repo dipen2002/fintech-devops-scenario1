@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Account Summary{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- Breadcrumb & Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 4px;">
+                <a href="{{ url_for('main.index') }}" style="color: var(--text-muted); text-decoration: none;">Dashboard</a> / Account Summary
+            </div>
+            <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px;">
+                Account Overview
+            </h2>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{{ url_for('main.api_account') }}" target="_blank" class="btn btn-secondary btn-sm font-mono">
+                GET /api/account
+            </a>
+        </div>
+    </div>
+
+    <!-- Educational Disclaimer Banner -->
+    <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); padding: 14px 18px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 1.4rem;">⚠️</span>
+        <div style="font-size: 0.85rem; color: #fde68a;">
+            <strong>MOCK ACCOUNT DATA:</strong> {{ account.disclaimer }}
+        </div>
+    </div>
+
+    <!-- Account Overview Card -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.85) 0%, rgba(30, 27, 75, 0.5) 100%);">
+        <div class="grid-2" style="align-items: center;">
+            <div>
+                <span class="badge badge-info" style="margin-bottom: 12px;">{{ account.account_type }}</span>
+                <div style="font-size: 0.9rem; color: var(--text-muted);">Account Holder</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">
+                    {{ account.account_holder }}
+                </div>
+
+                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Account Number</div>
+                        <div class="font-mono" style="font-size: 0.95rem; font-weight: 600; color: #cbd5e1;">{{ account.account_number }}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Sort Code</div>
+                        <div class="font-mono" style="font-size: 0.95rem; font-weight: 600; color: #cbd5e1;">{{ account.sort_code }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; text-align: right;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Current Available Balance</div>
+                <div style="font-size: 2.25rem; font-weight: 800; color: var(--accent-success); margin: 6px 0;">
+                    {{ account.formatted_balance }}
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 8px; align-items: center;">
+                    <span class="badge badge-success">{{ account.status }}</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Overdraft limit: £{{ "%.2f"|format(account.overdraft_limit) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Details & Financial Flow Stats -->
+    <div class="grid-3">
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Monthly Inflow</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-success); margin-top: 8px;">
+                {{ stats.formatted_income }}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 8px;">Simulated monthly payroll &amp; deposits</div>
+        </div>
+
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Monthly Outflow</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: #f87171; margin-top: 8px;">
+                {{ stats.formatted_expenses }}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 8px;">Simulated direct debits &amp; purchases</div>
+        </div>
+
+        <div class="card">
+            <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Net Flow</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); margin-top: 8px;">
+                {{ stats.formatted_net_flow }}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 8px;">Net positive cash flow</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

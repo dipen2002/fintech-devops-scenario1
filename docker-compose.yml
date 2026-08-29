@@ -1,0 +1,32 @@
+# ==============================================================================
+# FinTechFlow - Local Development & Verification Docker Compose
+# ==============================================================================
+# Usage:
+#   docker compose up --build
+#   docker compose ps
+#   docker compose down
+# ==============================================================================
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fintechflow-app
+    image: fintechflow:1.0.0
+    ports:
+      - "5000:5000"
+    environment:
+      - ENVIRONMENT=development
+      - APP_NAME=FinTechFlow
+      - APP_VERSION=1.0.0
+      - PORT=5000
+      - LOG_LEVEL=INFO
+      - SECRET_KEY=local-dev-compose-secret-key-educational-only
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:5000/health').getcode() == 200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

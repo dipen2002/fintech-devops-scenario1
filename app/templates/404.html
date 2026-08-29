@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}404 Not Found{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 40px auto; text-align: center;">
+    <div class="card" style="padding: 48px 24px;">
+        <div style="font-size: 4rem; font-weight: 800; color: var(--accent-primary); margin-bottom: 8px;" class="font-mono">404</div>
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;">Page Not Found</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">
+            The endpoint or resource you requested does not exist on this FinTechFlow server instance.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 12px;">
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">Return to Dashboard</a>
+            <a href="{{ url_for('main.health') }}" class="btn btn-secondary">Check /health</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
